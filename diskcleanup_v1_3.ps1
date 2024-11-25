@@ -16,6 +16,7 @@
     - Windows Update Cache
     - Prefetch-Dateien
     - Speicherabbild-Dateien
+    - Ordner WinSxS
     Am Ende wird eine detaillierte Zusammenfassung der bereinigten Bereiche ausgegeben.
     =====================================================================================
 #>
