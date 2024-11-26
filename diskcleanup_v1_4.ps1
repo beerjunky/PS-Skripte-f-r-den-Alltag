@@ -119,6 +119,16 @@ function Clear-Downloads {
     }
 }
 
+# Funktion: Alte Windows-Version entfernen
+function Clear-OldOS {
+    Write-Output "Bereinige alte Windows-Version..."
+    try {
+        Remove-Item -Path "C:\Windows.old" -Recurse -Force -ErrorAction SilentlyContinue
+        Log-Result -TaskName "Clear-OldOS" -Success $true -Message "Alte Windows-Version (Windows.old) entfernt."
+    } catch {
+        Log-Result -TaskName "Clear-OldOS" -Success $false -Message "Fehler: $_"
+    }
+}
 function Clear-ShadowCopies {
     Write-Host "Bereinige alte Schattenkopien..." -ForegroundColor Yellow
     try {
@@ -129,6 +139,7 @@ function Clear-ShadowCopies {
     }
 }
 
+# Funktion: Clear-WinSxS 
 function Clear-WinSxS {
     Write-Host "Bereinige WinSxS-Ordner..." -ForegroundColor Yellow
     try {
@@ -209,6 +220,7 @@ $freeSpaceBefore = Get-FreeSpacePerDrive
 Clear-RecycleBin
 Clear-TempFiles
 Clear-Downloads
+Clear-OldOS
 Clear-ShadowCopies
 Clear-WinSxS
 Clear-Prefetch
