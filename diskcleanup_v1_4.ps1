@@ -206,6 +206,7 @@ function Clear-OfflineCache {
 Write-Host "Starte Bereinigungsprozess..." -ForegroundColor Yellow
 $freeSpaceBefore = Get-FreeSpacePerDrive
 
+Clear-RecycleBin
 Clear-TempFiles
 Clear-Downloads
 Clear-ShadowCopies
