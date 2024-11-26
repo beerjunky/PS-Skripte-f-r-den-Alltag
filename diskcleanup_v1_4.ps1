@@ -8,6 +8,7 @@
     Description:
     Dieses Skript bereinigt alle bekannten Speicherfresser und Dateileichen auf einem
     Windows-System. Es umfasst:
+    - Papierkorb aller Benutzer leeren
     - Temporäre Dateien
     - Downloads-Ordner
     - Alte Windows-Versionen (Windows.old)
@@ -75,6 +76,23 @@ function Get-FreeSpacePerDrive {
 }
 
 # Bereinigungsfunktionen
+
+# Funktion: Papierkorb aller Benutzer leeren
+function Clear-RecycleBin {
+    Write-Output "Leere den Papierkorb aller Benutzer..."
+    try {
+        $shell = New-Object -ComObject Shell.Application
+        $recycleBin = $shell.Namespace(10)
+        if ($recycleBin.Items().Count -gt 0) {
+            $recycleBin.Items() | ForEach-Object { $recycleBin.InvokeVerb("delete") }
+            Log-Result -TaskName "Clear-RecycleBin" -Success $true -Message "Papierkorb geleert."
+        } else {
+            Log-Result -TaskName "Clear-RecycleBin" -Success $true -Message "Papierkorb war bereits leer."
+        }
+    } catch {
+        Log-Result -TaskName "Clear-RecycleBin" -Success $false -Message "Fehler: $_"
+    }
+}
 
 function Clear-TempFiles {
     Write-Host "Bereinige temporäre Dateien..." -ForegroundColor Yellow
