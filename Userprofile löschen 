@@ -1,0 +1,41 @@
+# Parameter für die maximale Profilalter (in Tagen)
+$MaxAgeInDays = 60
+
+# Aktuelles Datum und Uhrzeit
+$CurrentDate = Get-Date
+
+# Pfad zu den Benutzerprofilen
+$ProfilesPath = "C:\Users"
+
+# Liste der Profile, die nicht gelöscht werden sollen
+$ExcludedProfiles = @("Default", "Public", "Administrator", "All Users", "DefaultAppPool")
+
+# Holen aller Benutzerprofile (ohne spezielle Systemprofile und ausgeschlossene Profile)
+$UserProfiles = Get-ChildItem -Path $ProfilesPath -Directory | Where-Object {
+    $_.Name -notin $ExcludedProfiles
+}
+
+foreach ($Profile in $UserProfiles) {
+    # Pfad des Profils
+    $ProfilePath = $Profile.FullName
+
+    # Abrufen des letzten Zugriff-Datums
+    $LastAccessTime = (Get-Item $ProfilePath).LastWriteTime
+
+    # Berechnen der Differenz in Tagen
+    $AgeInDays = ($CurrentDate - $LastAccessTime).Days
+
+    if ($AgeInDays -gt $MaxAgeInDays) {
+        Write-Host "Profil '$($Profile.Name)' ist $AgeInDays Tage alt und wird gelöscht." -ForegroundColor Yellow
+
+        try {
+            # Löschen des Profils
+            Remove-Item -Path $ProfilePath -Recurse -Force -ErrorAction Stop
+            Write-Host "Profil '$($Profile.Name)' wurde erfolgreich gelöscht." -ForegroundColor Green
+        } catch {
+            Write-Host "Fehler beim Löschen des Profils '$($Profile.Name)': $_" -ForegroundColor Red
+        }
+    } else {
+        Write-Host "Profil '$($Profile.Name)' ist nur $AgeInDays Tage alt und bleibt erhalten." -ForegroundColor Cyan
+    }
+}
