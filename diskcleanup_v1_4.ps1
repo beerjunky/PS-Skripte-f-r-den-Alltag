@@ -143,7 +143,8 @@ function Clear-ShadowCopies {
 function Clear-WinSxS {
     Write-Host "Bereinige WinSxS-Ordner..." -ForegroundColor Yellow
     try {
-        dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase
+        Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
+        Dism.exe /Online /Cleanup-Image /SPSuperseded
         Log-Result -TaskName "Clear-WinSxS" -Success $true -Message "WinSxS-Ordner bereinigt."
     } catch {
         Log-Result -TaskName "Clear-WinSxS" -Success $false -Message "Fehler: $_"
